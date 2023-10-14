@@ -22,10 +22,11 @@
             <button class="night" type="reset">night-mode</button>
             <button id="add-flashcard">Add Flashcard</button>
         </div>
-    <label>sort by category:</label>
-    <div id="lists">
-    <div id="categoryList"></div>
+    <div class="sort">
+      <input id="lists" placeholder="sort by category">
+      <button id="categoryList" type="button">Sort</button>
     </div>
+    
       <!-- Display Card of Question And Answers Here -->
       <div id="card-con">
         <div class="card-list-container"></div>
@@ -41,7 +42,7 @@
           <span class="hide" id="error">Input fields cannot be empty!</span>
         </div>
         <!-- Close Button -->
-        <span class="fa-solid fa-xmark" id="close-btn"></span>
+        <span  id="close-btn">&times</span>
       </div>    
       <form id="question-form">
 
@@ -64,11 +65,12 @@
         rows="4"
         placeholder="Type the answer here..."
       ></textarea>
-      <button type="submit"  id="save-btn" onclick="window.location.reload();">Save</button>
+      <button type="submit"  id="save-btn">Save</button>
       </form>
     </div>
     <!-- Script -->
     <script src="create.js"></script>
+    
   </body>
 </html>
 

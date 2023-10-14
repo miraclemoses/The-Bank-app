@@ -1,6 +1,6 @@
 //event listeners - will be invoked after DOM Content is loaded
 function eventListeners(){
-const container = document.querySelector(".container");
+const container = document.getElementsByClassName("container");
 const addQuestionCard = document.getElementById("add-question-card");
 const cardButton = document.getElementById("save-btn");
 const question = document.getElementById("question");
@@ -41,12 +41,15 @@ let id;
     closeBtn.addEventListener('click', function(){
         ui.hideQuestion(addQuestionCard);
     });
+  
+  
     //add question
     form.addEventListener('submit', function(event){
         event.preventDefault();
 
         const questionValue = question.value;
         const answerValue = answer.value;
+        const categoryValue = categoryname.value
 
         if(questionValue === '' || answerValue === ''){
           feedback.classList.add('showitem', 'alert-danger');
@@ -55,17 +58,17 @@ let id;
             feedback.classList.remove("alert-danger", 'showitem');    
         }, 3000)
         } else {
-            const question =  new Question(id, questionValue, answerValue);
+            const question =  new Question(id, categoryValue, questionValue, answerValue);
             data.push(question);
             ui.addToLocalStorage(data);
             id++;
             ui.addQuestion(questionList, question)
             ui.clearFields(question, answer);
-            ui.showQuestion(questionList);
             ui.hideQuestion(addQuestionCard);
             
         }
-    });
+      });
+
     //work with a question
     questionList.addEventListener('click', function(event){
         event.preventDefault();
@@ -99,21 +102,60 @@ let id;
         });
         data = tempData;
         question.value = tempQuestion[0].title;
-        question.value = tempQuestion[0].answer;
+        answer.value = tempQuestion[0].answer;
+        categoryname.value = tempQuestion[0].categoryname;
+        
     }  
     });
     
+// sort according to category
+sort.addEventListener('click', () => {
+const sortBy = document.getElementById('lists').value
+
+let detached = document.querySelectorAll('[category]');
+let detachedArray = Array.from(detached);
+
+detachedArray.forEach(e => {
+  
+  if(e.getAttribute("category") != sortBy) {
+  
+    document.querySelector(".card-list-container").removeChild(e)
+    console.groupCollapsed('not found')
+      console.log(`not found but ${e.getAttribute("category")} can be found` )
+    console.groupEnd()
+    // sort() slow sorting
+    
+    
+  }else  {
+    console.groupCollapsed('found')
+      console.log(`${e.getAttribute("category")} found` )
+    console.groupEnd()
+    
+    
+    console.log(e)
+    document.querySelector(".card-list-container").append(e)
+    
+  }
+  
+    
+  });
+  
+});
+
+
+
 
 //Add question when user clicks 'Add Flashcard' button
 addQuestion.addEventListener("click", () => {
   container.classList.add("hide");
   question.value = "";
   answer.value = "";
+  categoryname = "";
   addQuestionCard.classList.remove("hide");
 });
 
 //Hide Create flashcard Card
-cardButton.addEventListener(
+closeBtn.addEventListener(
   "click",
   (hideQuestion = () => {
     container.classList.remove("hide");
@@ -126,7 +168,28 @@ cardButton.addEventListener(
 );
 
 
+
 }
+
+
+
+//Constructor function responsible for each question
+function Question(id, categoryname, title, answer){
+  this.id = id;
+  this.categoryname = categoryname
+  this.title = title;
+  this.answer = answer;
+  
+}
+
+
+// dom event listener to run when content is loaded
+document.addEventListener('DOMContentLoaded', function(){
+  eventListeners();
+});
+
+
+
 
 //Card Generate
 //Contructor function responsible for the display
@@ -135,6 +198,7 @@ cardButton.addEventListener(
       UI.prototype.showQuestion = function(element){
           element.classList.add('showitem');
       }
+      
       //hide question card
       UI.prototype.hideQuestion = function(element){
           element.classList.remove('showitem');
@@ -142,7 +206,10 @@ cardButton.addEventListener(
       //add question
       UI.prototype.addQuestion = function(element, question){
         const div = document.createElement('div');
-        div.classList.add('col-md-4');
+        div.classList.add(`col-md-4-`);
+        div.setAttribute('category',`${question.categoryname}`);
+        
+        
       div.innerHTML = `<div class="question-div">${question.title}</h4>
       <a href="#" class="show-hide-btn answer-div">Show/Hide Answer</a>
       <h5 class="answer mb3">${question.answer}</h5>
@@ -181,16 +248,7 @@ UI.prototype.clearFields = function(question, answer){
 
 
 
-//Constructor function responsible for each question
-function Question(id, title, answer){
-  this.id = id;
-  this.title = title;
-  this.answer = answer;
-}
-// dom event listener to run when content is loaded
-document.addEventListener('DOMContentLoaded', function(){
-  eventListeners();
-});
+
 
 // dark and light mode
 document.querySelector('.night').onclick = nightMode
@@ -198,15 +256,27 @@ document.querySelector('.night').onclick = nightMode
 
 let click = 1
 function nightMode() {
+  const question = document.querySelectorAll("#card-con");
+  const questionarray = Array.from(question);
+  console.log(questionarray)
     if (click%2 == 0) {
-        document.querySelector('body').classList.toggle('nightmode')
-        document.querySelector('.night').innerHTML = 'night-mode'
+        document.querySelector('body').classList.toggle('nightmode');
+        document.querySelector('.night').innerHTML = 'night-mode';
+        questionarray.classList.toggle('nightmode');
+
     }else {
         document.querySelector('body').classList.toggle('nightmode')
-        document.querySelector('.night').innerHTML = 'day-mode'
-    
+        document.querySelector('.night').innerHTML = 'day-mode';
+        questionarray.classList.toggle('nightmode');
+        
     }
     click +=1;
     // console.log(click)
 }
   
+// only cards
+// document.querySelector('#viewcards').addEventListener('click', viewCards) 
+
+// function viewCards() {
+//   document.querySelector('.add-flashcard-con').classList.add('hide')
+// }

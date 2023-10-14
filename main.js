@@ -23,6 +23,20 @@ function nightMode() {
 }
 function navBar() {
     document.querySelector('section').classList.toggle('nav')
-    document.querySelector('.lost').classList.toggle('nav')
+    document.querySelector('.lost').classList.toggle('hide')
+    document.getElementById('myNav').style.width = "50%"
+    
     
 }
+function closeNav() {
+    document.getElementById('myNav').style.width = "0%"
+    document.querySelector('.lost').classList.remove('hide')
+    
+}
+
+// only cards
+// document.querySelector('#viewcards').addEventListener('click', viewCards) 
+
+// function viewCards() {
+//   document.querySelector('.add-flashcard-con').classList.add('hide')
+// }
